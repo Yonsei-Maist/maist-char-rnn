@@ -14,15 +14,21 @@ module of character-based RNN
  - Train and Test Char-RNN
  - Predict something from characters
 
+## Environment
+```
+python 3.7 ~
+tensorflow 2.3.1 ~
+maist-model-core 1.0 ~
+```
+
 ## Install
 ```
 pip install -U git+https://git@github.com/Yonsei-Maist/char-rnn.git
 ```
 
-## Environment
+## Install Custom Library
 ```
-python 3.7 ~
-tensorflow 2.3.1 ~
+pip install -U git+https://git@github.com/Yonsei-Maist/maist-model-core.git
 ```
 
 ## Run
