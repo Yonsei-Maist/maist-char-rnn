@@ -1,12 +1,12 @@
 from setuptools import setup, find_packages
 
 setup(
-    name             = 'char-rnn',
+    name             = 'maist-char-rnn',
     version          = '1.0',
-    description      = 'Char-RNN module',
+    description      = 'Char-RNN module for MAIST',
     author           = 'Chanwoo Gwon',
     author_email     = 'arknell@yonsei.ac.kr',
-    url              = 'https://github.com/Yonsei-Maist/char-rnn.git',
+    url              = 'https://github.com/Yonsei-Maist/maist-char-rnn.git',
     install_requires = [
         "tensorflow>=2.3.1"
     ],
