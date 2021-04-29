@@ -6,11 +6,11 @@ library of character-based RNN
 
 import tensorflow as tf
 import os
-import codecs
 import numpy as np
 import random
 
 from model.core import ModelCore, LOSS, Net
+from ko.lib.spelling import HanJaMo
 
 
 class CharRNN(ModelCore):
@@ -67,8 +67,11 @@ class CharRNN(ModelCore):
 
 
 class TypoClassifier(CharRNN):
-    def __init__(self, data_path):
+    def __init__(self, data_path, use_han_ja_mo=True):
         self._label_dic = {}
+        self._use_han_ja_mo = use_han_ja_mo
+        if use_han_ja_mo:
+            self._han = HanJaMo()
         super().__init__(data_path, loss=LOSS.CATEGORICAL_CROSSENTROPY)
 
     def _make_word_world(self):
@@ -78,11 +81,11 @@ class TypoClassifier(CharRNN):
         for line in self._text_set.split('\n'):
             split_data = line.strip().split('\t')
 
-            typo = split_data[0]
+            typo = self._han.divide(split_data[0]) if self._use_han_ja_mo else split_data[0]
             answer = split_data[1]
 
             data_temp.append([typo, answer])
-            char_world = "{0}{1}".format(char_world, split_data[0])
+            char_world = "{0}{1}".format(char_world, typo)
             max_length = max(max_length, len(typo))
 
             if answer not in self._label_dic:
@@ -124,6 +127,9 @@ class TypoClassifier(CharRNN):
                 return key
         return None
 
+    def to_predictable_data(self, word):
+        return self._han.divide(word) if self._use_han_ja_mo else word
+
     def build_model(self):
         vocab_size = len(self._char_set)
         input = tf.keras.layers.Input([self._time_step])
@@ -139,13 +145,3 @@ class TypoClassifier(CharRNN):
         dense = tf.keras.layers.Dense(self._last_dim, activation=tf.keras.activations.softmax)(output)
 
         self.model = tf.keras.Model(inputs=input, outputs=dense)
-
-
-class CharCollector:
-    """
-    Character Collector Class
-
-    1. Collect character from data-set (documents)
-    2. Return the index of character set
-    """
-    pass

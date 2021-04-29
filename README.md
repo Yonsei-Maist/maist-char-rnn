@@ -23,12 +23,13 @@ maist-model-core 1.0 ~
 
 ## Install
 ```
-pip install -U git+https://git@github.com/Yonsei-Maist/char-rnn.git
+pip install -U git+https://git@github.com/Yonsei-Maist/maist-char-rnn.git
 ```
 
 ## Install Custom Library
 ```
 pip install -U git+https://git@github.com/Yonsei-Maist/maist-model-core.git
+pip install -U git+https://git@github.com/Yonsei-Maist/maist-nlp.git
 ```
 
 ## Run
