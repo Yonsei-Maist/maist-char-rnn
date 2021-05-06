@@ -10,7 +10,7 @@ import numpy as np
 import random
 
 from model.core import ModelCore, LOSS, Net
-from ko.lib.spelling import HanJaMo
+from ko.character.spelling import HanJaMo
 
 
 class CharRNN(ModelCore):

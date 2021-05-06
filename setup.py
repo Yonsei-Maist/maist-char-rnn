@@ -8,7 +8,6 @@ setup(
     author_email     = 'arknell@yonsei.ac.kr',
     url              = 'https://github.com/Yonsei-Maist/maist-char-rnn.git',
     install_requires = [
-        "tensorflow>=2.3.1"
     ],
     packages         = find_packages(exclude = ['docs', 'tests*']),
     keywords         = ['char', 'rnn'],
