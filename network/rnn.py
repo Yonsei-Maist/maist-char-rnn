@@ -67,9 +67,10 @@ class CharRNN(ModelCore):
 
 
 class TypoClassifier(CharRNN):
-    def __init__(self, data_path, use_han_ja_mo=True):
+    def __init__(self, data_path, use_han_ja_mo=True, default_set=""):
         self._label_dic = {}
         self._use_han_ja_mo = use_han_ja_mo
+        self._default_set = default_set
         if use_han_ja_mo:
             self._han = HanJaMo()
         super().__init__(data_path, loss=LOSS.CATEGORICAL_CROSSENTROPY)
@@ -91,7 +92,7 @@ class TypoClassifier(CharRNN):
             if answer not in self._label_dic:
                 self._label_dic[answer] = len(self._label_dic)
 
-        self._text_set = char_world
+        self._text_set = char_world + self._default_set
         self._time_step = max_length
         self._last_dim = len(self._label_dic)
         # make char set using typo only
