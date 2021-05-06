@@ -21,7 +21,7 @@ class CharRNN(ModelCore):
     2. Could be used like the encoder
     3. Can many-to-many or many-to-one RNN
     """
-    def __init__(self, data_path, emb=100, loss=LOSS.SPARSE_CATEGORICAL_CROSSENTROPY):
+    def __init__(self, data_path, emb=100, loss=LOSS.SPARSE_CATEGORICAL_CROSSENTROPY, is_classify=False):
 
         self._time_step = 0
         self._text_set = None
@@ -32,7 +32,7 @@ class CharRNN(ModelCore):
         self._text_as_int = None
         self._last_dim = 0
 
-        super().__init__(data_path, loss=loss)
+        super().__init__(data_path, loss=loss, is_classify=is_classify)
 
     def read_data(self):
         char_path = os.path.join(self._data_path, 'data.txt')
@@ -73,7 +73,10 @@ class TypoClassifier(CharRNN):
         self._default_set = default_set
         if use_han_ja_mo:
             self._han = HanJaMo()
-        super().__init__(data_path, loss=LOSS.CATEGORICAL_CROSSENTROPY)
+        super().__init__(data_path, loss=LOSS.CATEGORICAL_CROSSENTROPY, is_classify=True)
+
+        print("train data:", len(self._train_data))
+        print("test data:", len(self._test_data))
 
     def _make_word_world(self):
         data_temp = []
@@ -98,29 +101,14 @@ class TypoClassifier(CharRNN):
         # make char set using typo only
         self._set_char([' '])
 
-        data_all = []
+        self._data_all = []
         for item in data_temp:
             item_one = item[0]
             zero = [0] * len(self._label_dic)
             zero[self._label_dic[item[1]]] = 1
             if len(item_one) < max_length:
                 item_one = "{0}{1}".format(item_one, ''.join([' '] * (max_length - len(item_one))))
-            data_all.append([self.to_vector(item_one), zero])
-
-        random.shuffle(data_all)
-        sp = int(len(data_all) * 0.8)
-
-        self._train_data.set(
-            [tf.convert_to_tensor([item[0] for item in data_all[:sp]], dtype=tf.int64)],
-            [tf.convert_to_tensor([item[1] for item in data_all[:sp]], dtype=tf.int64)]
-        )
-        self._test_data.set(
-            [tf.convert_to_tensor([item[0] for item in data_all[sp:]], dtype=tf.int64)],
-            [tf.convert_to_tensor([item[1] for item in data_all[sp:]], dtype=tf.int64)]
-        )
-
-        print("train data:", len(self._train_data))
-        print("test data:", len(self._test_data))
+            self._data_all.append({'input': self.to_vector(item_one), 'output': zero})
 
     def get_label(self, index):
         for key, value in self._label_dic.items():
