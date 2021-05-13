@@ -56,7 +56,7 @@ class CharRNN(ModelCore):
     def build_model(self):
         super().build_model()
 
-    def to_vector(self, sequence, add_margin=False):
+    def to_vector(self, sequence, add_margin=True):
         if add_margin:
             if len(sequence) < self._time_step:
                 sequence = "{0}{1}".format(sequence, ''.join([' '] * (self._time_step - len(sequence))))
