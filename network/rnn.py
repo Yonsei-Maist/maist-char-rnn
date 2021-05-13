@@ -117,7 +117,7 @@ class TypoClassifier(CharRNN):
         return None
 
     def to_predictable_data(self, word):
-        return self._han.divide(word) if self._use_han_ja_mo else word
+        return tf.convert_to_tensor([self.to_vector(self._han.divide(word) if self._use_han_ja_mo else word)], dtype=tf.float32)
 
     def build_model(self):
         vocab_size = len(self._char_set)
